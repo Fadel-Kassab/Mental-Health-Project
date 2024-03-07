@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
+import CustomTextInput from './src/components/CustomTextInput';
 
 const App = () => {
 
@@ -9,17 +10,15 @@ const App = () => {
   return (
     <View style={style.container}>
       <Text style={style.title}>Login</Text>
-      <TextInput
-        style={style.input}
+      <Text>Enter your personal email.</Text>
+      <CustomTextInput
         value={userName}
         onChangeText={setUserName}
-        autoComplete='email'
       />
-      <TextInput
-        style={style.input}
+      <CustomTextInput
         value={password}
         onChangeText={setPassword}
-        secureTextEntry={true}
+        secureTextEntry
       />
     </View>
   )
@@ -32,21 +31,12 @@ const style = StyleSheet.create({
     marginBottom: 10
   },
   container: {
-    marginTop: 20,
+    backgroundColor: "#FEFAE0",
     display: "flex",
     flexGrow: 1,
     flexDirection: "column",
     alignItems: "center",
-  },
-  input: {
-    textAlign: "center",
-    width: "70%",
-    height: 50,
-    padding: 1,
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    marginBottom: 10,
+    paddingTop: 150 
   }
 })
 
