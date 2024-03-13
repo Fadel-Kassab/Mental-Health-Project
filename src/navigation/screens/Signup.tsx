@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
+import CustomButton, { CustomTextButton } from '../../components/CustomButton';
 
-const Signup = () => {
+
+const Signup = ({ navigation, route }: { navigation: any, route: any }) => {
 
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -12,26 +13,33 @@ const Signup = () => {
   return (
     <View style={style.container}>
       <Text style={style.title}>Signup</Text>
-      <Text>Enter your personal email.</Text>
       <CustomTextInput
         value={userName}
         onChangeText={setUserName}
+        placeholder='Email'
       />
       <CustomTextInput
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        placeholder='Password'
       />
-     <CustomTextInput
+      <CustomTextInput
         value={passwordConfirmation}
         onChangeText={setPasswordConfirmation}
         secureTextEntry
+        placeholder='Re-enter your password'
       />
       <CustomButton
         label='Sign Up'
-        onPress={() => console.log("Navigation next")}
-      />
+      /><View style={style.auth_navigation}>
+        <Text>Already have an account? </Text>
+        <CustomTextButton
+          onPress={() => navigation.navigate("login")}
+          label='Sign in' />
+      </View>
     </View>
+
   )
 }
 
@@ -48,6 +56,11 @@ const style = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     paddingTop: 150
+  },
+  auth_navigation: {
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "row"
   }
 })
 

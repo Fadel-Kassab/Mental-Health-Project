@@ -39,4 +39,17 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   )
 }
 
+export const CustomTextButton: React.FC<CustomButtonProps> = ({ label, ...props }) => {
+  const style = StyleSheet.create({
+    text: {
+      fontWeight: "700",
+      color: "#5F6F52",
+    }
+  })
+  return <TouchableOpacity {...props}>
+    <Text style={style.text}>{label}</Text>
+  </TouchableOpacity>
+
+}
+
 export default CustomButton

@@ -29,13 +29,14 @@ const CustomTextInput: React.FC<TextInputProps> = ({
         }
     })
 
-    const [hidden, setHidden] = useState<boolean>(secureTextEntry||false);
+    const [hidden, setHidden] = useState<boolean>(secureTextEntry || false);
 
     return (
         <View style={style.container}>
             <TextInput
                 style={style.input}
                 secureTextEntry={hidden}
+
                 {...props}
             />
             {
@@ -43,7 +44,7 @@ const CustomTextInput: React.FC<TextInputProps> = ({
                 <TouchableOpacity
                     onPress={() => setHidden(!hidden)}
                 >
-                    <Icon style={style.Icon} name={hidden ? "eye" : "eye-off"} size={25} />
+                    <Icon style={style.Icon} name={hidden ? "eye" : "eye-off"} size={20} />
                 </TouchableOpacity>
             }
         </View>
