@@ -13,7 +13,7 @@ const Entry = () => {
   return (
     <NavigationContainer>
       {!isAuth ? <Stack.Navigator>
-        <Stack.Screen name="login" component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name="sigin" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="signup" component={Signup} options={{ headerShown: false }} />
       </Stack.Navigator> :
         <Stack.Navigator>

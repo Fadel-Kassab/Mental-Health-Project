@@ -2,32 +2,60 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton, { CustomTextButton } from '../../components/CustomButton';
+import { useForm, Controller, Form } from 'react-hook-form';
+import { login } from '../../../api/users';
+
+type FormData = {
+  email: string
+  password: string
+  passwordConfirmation: string
+}
 
 
 const Login = ({ navigation, route }: { navigation: any, route: any }) => {
 
-
-  const [userName, setUserName] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+  const { control, formState, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    }
+  })
+  const onSubmit = handleSubmit((data) => {
+    login(data)
+  })
 
   return (
     <View style={style.container}>
       <Text style={style.title}>Login</Text>
+      <Controller
+        control={control}
+        name='email'
+        render={({ field: { onChange, value } }) => {
+          return <CustomTextInput
+            value={value}
+            onChangeText={onChange}
+            placeholder='Email'
+          />
+        }}
+      />
+      <Controller
+        control={control}
+        name='password'
+        render={({ field: { onChange, value } }) => {
+          return <CustomTextInput
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            placeholder='Password' />
+        }}
 
-      <CustomTextInput
-        value={userName}
-        onChangeText={setUserName}
-        placeholder='Email'
       />
-      <CustomTextInput
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholder='Password'
-      />
+
       <CustomButton
+        onPress={onSubmit}
         label='Login'
       />
+
       <View style={style.auth_navigation}>
         <Text>Don't have an account yet? </Text>
         <CustomTextButton
