@@ -1,11 +1,12 @@
-import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import CustomTextInput from '../../../components/CustomTextInput';
-import CustomButton, {CustomTextButton} from '../../../components/CustomButton';
-import {useForm, Controller, Form} from 'react-hook-form';
-import {login} from '../../../api/users';
-import {UserContext} from '../../../context/userContext';
-import {UserContextType, User, UserLogin} from '../../../types/User';
+import CustomButton, { CustomTextButton } from '../../../components/CustomButton';
+import { useForm, Controller } from 'react-hook-form';
+import { UserContext } from '../../../context/userContext';
+import { UserContextType, UserLoginParams } from '../../../models/UserContext';
+import { useApiStatus } from '../../../hooks/useApiStatus';
+import { BeWellApi } from '../../../api/BeWellApi';
 
 type FormData = {
   email: string;
@@ -13,8 +14,9 @@ type FormData = {
   passwordConfirmation: string;
 };
 
-const Login = ({navigation, route}: {navigation: any; route: any}) => {
-  const {control, formState, handleSubmit} = useForm<FormData>({
+const Login = ({ navigation, route }: { navigation: any; route: any }) => {
+
+  const { control, formState, handleSubmit } = useForm<FormData>({
     defaultValues: {
       email: '',
       password: '',
@@ -22,19 +24,21 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
   });
 
   //Context Provider
-  const {signIn} = useContext(UserContext) as UserContextType;
+  const { signIn } = useContext(UserContext) as UserContextType;
+
+  const loginApi = useApiStatus({
+    api: BeWellApi.auth.login,
+    onSuccess({ result }) {
+      console.log(result)
+    },
+  })
 
   const onSubmit = handleSubmit(data => {
-    let userData: UserLogin;
-    userData = {
+    let userData: UserLoginParams = {
       email: data.email,
       password: data.password,
-      id: '',
-      firstName: '',
-      lastName: '',
-      token: '',
-      verified: false,
     };
+    //loginApi.fire(userData);
     signIn(userData);
   });
 
@@ -44,7 +48,7 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
       <Controller
         control={control}
         name="email"
-        render={({field: {onChange, value}}) => {
+        render={({ field: { onChange, value } }) => {
           return (
             <CustomTextInput
               value={value}
@@ -57,7 +61,7 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
       <Controller
         control={control}
         name="password"
-        render={({field: {onChange, value}}) => {
+        render={({ field: { onChange, value } }) => {
           return (
             <CustomTextInput
               value={value}

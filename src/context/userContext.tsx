@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {UserContextType, User, UserLogin, UserSignup} from '../types/User';
-import {login, register} from '../api/users';
+import { UserContextType, User, UserLoginParams, UserSignupParams } from '../models/UserContext';
+import { login, register } from '../api/BeWellApi';
 
 export const UserContext = React.createContext<UserContextType | null>(null);
 
-export const UserProvider: React.FC<{children: React.ReactNode}> = ({
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+
   const [user, setUser] = React.useState<User>({
     id: '',
     firstName: '',
@@ -16,7 +17,15 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({
     verified: false,
   });
 
-  const signIn = async (user: {email: string; password: string}) => {
+  const storeUser = ( user: User ) => {
+    setUser(user)
+  }
+  const useUser = () => {
+    return user
+  }
+
+  const signIn = async (user: UserLoginParams) => {
+
     try {
       const res = await login(user);
       const data = res.data;
@@ -36,11 +45,7 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({
     }
   };
 
-  const signUp = async (user: {
-    email: string;
-    password: string;
-    confirmationPassword: string;
-  }) => {
+  const signUp = async (user: UserSignupParams) => {
     try {
       const res = await register(user);
       const data = res.data;
@@ -73,6 +78,8 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({
     user,
     signIn,
     signUp,
+    storeUser,
+    useUser
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

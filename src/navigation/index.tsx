@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
 import {UserContext} from '../context/userContext';
-import {UserContextType} from '../types/User';
+import {UserContextType} from '../models/UserContext';
 import Journaling from './screens/Journaling';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Therapists from './screens/Therapists';
