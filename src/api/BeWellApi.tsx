@@ -1,11 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 import { UserLoginParams, UserSignupParams } from '../models/UserContext';
+import ApiUser from './models/ApiUser';
+import { ApiToken } from './models/ApiToken';
 
 const beWell = axios.create({
   baseURL: 'http://10.0.2.2:3083/'
 })
 
-interface AuthResponse {
+export interface AuthResponse {
   user: ApiUser
   token: ApiToken
 }

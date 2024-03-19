@@ -1,4 +1,4 @@
-interface ApiUser {
+export default interface ApiUser {
   _id: string
   firstName: string
   lastName: string

@@ -1,55 +1,35 @@
 import React from "react";
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableOpacityProps
+  TouchableOpacityProps,
+  ActivityIndicator
 } from "react-native"
+import colors from "../../resources/colors/tailwindExport";
 
 interface CustomButtonProps extends TouchableOpacityProps {
   label: string
+  isLoading?: boolean
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   label,
+  isLoading,
   ...props
 }) => {
 
-  const style = StyleSheet.create({
-    button: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "80%",
-      height: 40,
-      borderRadius: 4,
-      backgroundColor: "#5F6F52"
-    },
-    label: {
-      textAlign: "center",
-      color: "white",
-      fontWeight: "700"
-    }
-  })
-
   return (
-    <TouchableOpacity style={style.button} {...props}>
-      <Text style={style.label}>{label}</Text>
+    <TouchableOpacity
+      className="bg-secondary flex justify-center items-center w-full h-11 rounded-lg"
+      {...props}
+    >
+      {isLoading ?
+        <ActivityIndicator color={colors.white}/>
+        :
+        <Text className="text-center font-bold text-white">{label}</Text>
+      }
     </TouchableOpacity>
   )
-}
-
-export const CustomTextButton: React.FC<CustomButtonProps> = ({ label, ...props }) => {
-  const style = StyleSheet.create({
-    text: {
-      fontWeight: "700",
-      color: "#5F6F52",
-    }
-  })
-  return <TouchableOpacity {...props}>
-    <Text style={style.text}>{label}</Text>
-  </TouchableOpacity>
-
 }
 
 export default CustomButton

@@ -1,115 +1,91 @@
-import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import CustomTextInput from '../../../components/CustomTextInput';
-import CustomButton, {CustomTextButton} from '../../../components/CustomButton';
-import {Controller, Form, SubmitHandler, useForm} from 'react-hook-form';
-import {register} from '../../../api/users';
-import axios from 'axios';
-import {UserContext} from '../../../context/userContext';
-import {UserContextType} from '../../../types/User';
+import CustomButton from '../../../components/CustomButton';
+import { Controller, useForm } from 'react-hook-form';
+import { UserContext } from '../../../context/userContext';
+import { UserContextType, UserSignupParams } from '../../../models/UserContext'; 
+import CustomTextButton from '../../../components/CustomTextButton';
 
-type FormData = {
-  email: string;
-  password: string;
-  confirmationPassword: string;
-};
-
-const Signup = ({navigation, route}: {navigation: any; route: any}) => {
-  const {control, formState, handleSubmit} = useForm<FormData>({
+const Signup = ({ navigation, route }: { navigation: any; route: any }) => {
+  const { control, formState, handleSubmit } = useForm<UserSignupParams>({
     defaultValues: {
       email: '',
       password: '',
-      confirmationPassword: '',
+      confirmPassword: '',
     },
   });
 
   //Context Provider
-  const {signUp} = useContext(UserContext) as UserContextType;
+  const { signUp } = useContext(UserContext) as UserContextType;
 
   const onSubmit = handleSubmit(data => {
     signUp(data);
   });
 
   return (
-    <View style={style.container}>
-      <Text style={style.title}>Signup</Text>
-      {/* <View style={style.name_input}>
-        <CustomTextInput />
-        <CustomTextInput />
-      </View> */}
+    <View className="bg-primary flex-1 items-center px-3 pt-20">
+      <Text className='font-medium text-3xl mb-5'>Signup</Text>
+
       <Controller
         control={control}
         name="email"
-        render={({field: {onChange, value}}) => {
+        render={({ field: { onChange, value } }) => {
           return (
             <CustomTextInput
               value={value}
               onChangeText={onChange}
               placeholder="Email"
+              containerClassName='mb-2'
             />
           );
         }}
       />
+
       <Controller
         control={control}
         name="password"
-        render={({field: {onChange, value}}) => {
+        render={({ field: { onChange, value } }) => {
           return (
             <CustomTextInput
               value={value}
               onChangeText={onChange}
               secureTextEntry
               placeholder="Password"
+              containerClassName='mb-2'
             />
           );
         }}
       />
+
       <Controller
         control={control}
-        name="confirmationPassword"
-        render={({field: {onChange, value}}) => {
+        name="confirmPassword"
+        render={({ field: { onChange, value } }) => {
           return (
             <CustomTextInput
               value={value}
               onChangeText={onChange}
               secureTextEntry
               placeholder="Re-enter your password"
+              containerClassName='mb-5'
             />
           );
         }}
       />
+
       <CustomButton onPress={onSubmit} label="Sign Up" />
 
-      <View style={style.auth_navigation}>
+      <View className='flex-row mt-3'>
         <Text>Already have an account? </Text>
         <CustomTextButton
           onPress={() => navigation.navigate('sigin')}
           label="Sign in"
         />
       </View>
+
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  title: {
-    fontSize: 25,
-    fontWeight: '700',
-    marginBottom: 10,
-  },
-  container: {
-    backgroundColor: '#FEFAE0',
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: 150,
-  },
-  auth_navigation: {
-    marginTop: 20,
-    display: 'flex',
-    flexDirection: 'row',
-  },
-});
 
 export default Signup;

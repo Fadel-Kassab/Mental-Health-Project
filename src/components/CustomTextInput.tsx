@@ -1,47 +1,30 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   TextInput,
-  StyleSheet,
   TextInputProps,
   View,
   TouchableOpacity,
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Feather';
 
-const CustomTextInput: React.FC<TextInputProps> = ({
+interface CustomTextInputProps extends TextInputProps {
+  containerClassName?: string
+}
+
+const CustomTextInput: React.FC<CustomTextInputProps> = ({
   secureTextEntry,
+  containerClassName,
   ...props
 }) => {
-  const style = StyleSheet.create({
-    container: {
-      width: '80%',
-      borderWidth: 1,
-      borderColor: 'black',
-      borderRadius: 10,
-      marginBottom: 10,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    input: {
-      height: 45,
-      padding: 2,
-      marginLeft: 10,
-      width: secureTextEntry ? '87%' : '100%',
-    },
-    Icon: {
-      marginRight: 20,
-    },
-  });
 
   const [hidden, setHidden] = useState<boolean>(secureTextEntry || false);
 
   return (
-    <View style={style.container}>
-      <TextInput style={style.input} secureTextEntry={hidden} {...props} />
+    <View className={`px-2 w-full rounded-lg border-2 border-green-700 flex-row items-center ${containerClassName}`}>
+      <TextInput className={`${secureTextEntry ? "w-11/12" : "w-full"}`} secureTextEntry={hidden} {...props} />
       {secureTextEntry && (
-        <TouchableOpacity onPress={() => setHidden(!hidden)}>
-          {/* <Icon style={style.Icon} name={hidden ? "eye" : "eye-off"} size={20} /> */}
+        <TouchableOpacity className="w-1/12 items-center justify-center" onPress={() => setHidden(!hidden)}>
+          <Icon name={hidden ? "eye" : "eye-off"} size={22} />
         </TouchableOpacity>
       )}
     </View>

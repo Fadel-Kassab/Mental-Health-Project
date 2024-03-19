@@ -1,1 +1,1 @@
-type ApiToken = string
+export type ApiToken = string
