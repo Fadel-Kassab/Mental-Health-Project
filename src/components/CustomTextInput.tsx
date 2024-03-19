@@ -6,7 +6,8 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Feather';
+import {ErrorText} from './Customs/Texts';
 
 const CustomTextInput: React.FC<TextInputProps> = ({
   secureTextEntry,
@@ -14,17 +15,16 @@ const CustomTextInput: React.FC<TextInputProps> = ({
 }) => {
   const style = StyleSheet.create({
     container: {
-      width: '80%',
+      width: '100%',
       borderWidth: 1,
       borderColor: 'black',
       borderRadius: 10,
-      marginBottom: 10,
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
     },
     input: {
-      height: 45,
+      height: 50,
       padding: 2,
       marginLeft: 10,
       width: secureTextEntry ? '87%' : '100%',
@@ -41,7 +41,11 @@ const CustomTextInput: React.FC<TextInputProps> = ({
       <TextInput style={style.input} secureTextEntry={hidden} {...props} />
       {secureTextEntry && (
         <TouchableOpacity onPress={() => setHidden(!hidden)}>
-          {/* <Icon style={style.Icon} name={hidden ? "eye" : "eye-off"} size={20} /> */}
+          <Icon
+            style={style.Icon}
+            name={hidden ? 'eye' : 'eye-off'}
+            size={20}
+          />
         </TouchableOpacity>
       )}
     </View>

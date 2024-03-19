@@ -35,7 +35,12 @@ const Entry = () => {
   return (
     <NavigationContainer>
       {!user.token ? (
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: '#F5F5F5',
+            },
+          }}>
           <Stack.Screen
             name="sigin"
             component={Login}
