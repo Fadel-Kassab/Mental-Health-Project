@@ -1,42 +1,62 @@
-import * as React from 'react';
+import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Login from './screens/Login';
-import Signup from './screens/Signup';
-import Welcome from './screens/Welcome';
+import Login from './screens/auth/Login';
+import Signup from './screens/auth/Signup';
+import {UserContext} from '../context/userContext';
+import {UserContextType} from '../models/UserContext';
+import Journaling from './screens/Journaling';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Therapists from './screens/Therapists';
+import Resources from './screens/Resources';
+import Communities from './screens/Communities';
+import Profile from './screens/Profile';
+// import Journaling from './screens/Journaling';
+
+const BottomTab = createBottomTabNavigator();
+
+const TabNavigator = () => {
+  return (
+    <BottomTab.Navigator screenOptions={{headerShown: false}}>
+      <BottomTab.Screen name="Resources" component={Resources} />
+      <BottomTab.Screen name="Journaling" component={Journaling} />
+      <BottomTab.Screen name="Therapists" component={Therapists} />
+      <BottomTab.Screen name="Communities" component={Communities} />
+      <BottomTab.Screen name="Profile" component={Profile} />
+    </BottomTab.Navigator>
+  );
+};
 
 const Entry = () => {
   const Stack = createNativeStackNavigator();
-  let isAuth = false;
+
+  const {user} = useContext(UserContext) as UserContextType;
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: '#F5F5F5',
-          },
-        }}>
-        <Stack.Screen
-          name="Welcome"
-          component={Welcome}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="signin"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="signup"
-          component={Signup}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-      {/* :
-  <Stack.Navigator>
-    <Stack.Screen name="Journaling" component={Journaling} />
-  </Stack.Navigator>} */}
+      {!user.token ? (
+        <Stack.Navigator
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: '#F5F5F5',
+            },
+          }}>
+          <Stack.Screen
+            name="sigin"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="signup"
+            component={Signup}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="tab" component={TabNavigator} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
