@@ -11,6 +11,7 @@ import Therapists from './screens/Therapists';
 import Resources from './screens/Resources';
 import Communities from './screens/Communities';
 import Profile from './screens/Profile';
+import Welcome from './screens/auth/Welcome';
 // import Journaling from './screens/Journaling';
 
 const BottomTab = createBottomTabNavigator();
@@ -42,7 +43,12 @@ const Entry = () => {
             },
           }}>
           <Stack.Screen
-            name="sigin"
+            name="welcome"
+            component={Welcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="signin"
             component={Login}
             options={{headerShown: false}}
           />

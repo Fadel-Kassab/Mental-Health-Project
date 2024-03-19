@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import CustomButton from '../../components/CustomButton';
-import {BoldText, LightText} from '../../components/Customs/Texts';
+import CustomButton from '../../../components/CustomButton';
+import {BoldText, LightText} from '../../../components/Customs/Texts';
 
 const Welcome = ({navigation}: {navigation: any}) => {
   return (

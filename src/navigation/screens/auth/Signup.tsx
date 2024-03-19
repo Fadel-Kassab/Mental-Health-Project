@@ -2,24 +2,32 @@ import React, {useContext, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton, {CustomTextButton} from '../../../components/CustomButton';
-import {Controller, Form, SubmitHandler, useForm} from 'react-hook-form';
-import {register} from '../../../api/users';
-import axios from 'axios';
+import {Controller, useForm} from 'react-hook-form';
+import {
+  BoldText,
+  ErrorText,
+  LightText,
+} from '../../../components/Customs/Texts';
 import {UserContext} from '../../../context/userContext';
-import {UserContextType} from '../../../types/User';
+import {UserContextType, UserSignupParams} from '../../../models/UserContext';
 
 type FormData = {
   email: string;
   password: string;
-  confirmationPassword: string;
+  confirmPassword: string;
 };
 
 const Signup = ({navigation, route}: {navigation: any; route: any}) => {
-  const {control, formState, handleSubmit} = useForm<FormData>({
+  const {
+    control,
+    formState: {errors},
+    getValues,
+    handleSubmit,
+  } = useForm<FormData>({
     defaultValues: {
       email: '',
       password: '',
-      confirmationPassword: '',
+      confirmPassword: '',
     },
   });
 
@@ -27,17 +35,23 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
   const {signUp} = useContext(UserContext) as UserContextType;
 
   const onSubmit = handleSubmit(data => {
+    let userData: UserSignupParams = {
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
     signUp(data);
   });
 
   return (
     <View style={style.container}>
-      <Text style={style.title}>Signup</Text>
-      {/* <View style={style.name_input}>
-        <CustomTextInput />
-        <CustomTextInput />
-      </View> */}
+      <BoldText>SignUp</BoldText>
+      <LightText>Welcome to Be well, creat your account.</LightText>
+      <View style={style.seperator} />
       <Controller
+        rules={{
+          required: 'Email is required',
+        }}
         control={control}
         name="email"
         render={({field: {onChange, value}}) => {
@@ -50,7 +64,10 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
           );
         }}
       />
+      <ErrorText>{errors.email?.message || ''}</ErrorText>
+
       <Controller
+        rules={{required: 'Password is required'}}
         control={control}
         name="password"
         render={({field: {onChange, value}}) => {
@@ -64,9 +81,15 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
           );
         }}
       />
+      <ErrorText>{errors.password?.message || ''}</ErrorText>
       <Controller
+        rules={{
+          required: 'Passwords do not match',
+          validate: value =>
+            value === getValues('password') || 'Passwords do not match',
+        }}
         control={control}
-        name="confirmationPassword"
+        name="confirmPassword"
         render={({field: {onChange, value}}) => {
           return (
             <CustomTextInput
@@ -78,32 +101,31 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
           );
         }}
       />
-      <CustomButton onPress={onSubmit} label="Sign Up" />
-
-      <View style={style.auth_navigation}>
-        <Text>Already have an account? </Text>
-        <CustomTextButton
-          onPress={() => navigation.navigate('sigin')}
-          label="Sign in"
-        />
+      <ErrorText>{errors.confirmPassword?.message || ''}</ErrorText>
+      <View style={{display: 'flex', alignItems: 'center', marginTop: 20}}>
+        <CustomButton onPress={onSubmit} label="SignUp" />
+        <View style={style.auth_navigation}>
+          <Text>Already have an account? </Text>
+          <CustomTextButton
+            onPress={() => navigation.navigate('signin')}
+            label="Sign in"
+          />
+        </View>
+        <ErrorText>randomerror</ErrorText>
       </View>
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  title: {
-    fontSize: 25,
-    fontWeight: '700',
-    marginBottom: 10,
-  },
   container: {
-    backgroundColor: '#FEFAE0',
+    height: '100%',
     display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: 150,
+    paddingHorizontal: 20,
+    paddingVertical: 40,
+  },
+  seperator: {
+    height: 50,
   },
   auth_navigation: {
     marginTop: 20,
