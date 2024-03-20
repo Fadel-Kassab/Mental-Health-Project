@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios"
 import { useEffect, useState } from "react"
+import { log } from "../utils/logs"
 
 type ApiCall = (...args: any[]) => Promise<AxiosResponse<any>>
 
@@ -60,7 +61,7 @@ export function useApiStatus<Call extends ApiCall>({
     if (!updateSilently) setData(undefined)
     try {
       const { data } = await api(...args)
-      console.info(`api succesfull ${api.name}`)
+      log.info(`api succesfull ${api.name}`)
       onSuccess && onSuccess({ result: data, args })
       setData(data)
     } catch (error: any) {
@@ -86,7 +87,7 @@ export function useApiStatus<Call extends ApiCall>({
           .map(arr => arr.join(" | "))
           .join("\n")
 
-      console.error(
+      log.error(
         `api (${api.name}) failed with error: ${error} ${errorLog ? "\n" + errorLog : ""
         }`,
       )

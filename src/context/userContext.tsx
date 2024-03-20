@@ -1,13 +1,19 @@
 import * as React from 'react';
-import { UserContextType, User, UserLoginParams, UserSignupParams } from '../models/UserContext';
-import { login, register } from '../api/BeWellApi';
+import {
+  UserContextType,
+  User,
+  UserLoginParams,
+  UserSignupParams,
+} from '../models/UserContext';
+import {login, register} from '../api/BeWellApi';
+import {AxiosErrorModel} from '../api/models/Axios';
+import {log} from '../utils/logs';
 
 export const UserContext = React.createContext<UserContextType | null>(null);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+export const UserProvider: React.FC<{children: React.ReactNode}> = ({
   children,
 }) => {
-
   const [user, setUser] = React.useState<User>({
     id: '',
     firstName: '',
@@ -17,15 +23,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     verified: false,
   });
 
-  const storeUser = ( user: User ) => {
-    setUser(user)
-  }
+  const storeUser = (user: User) => {
+    setUser(user);
+  };
   const useUser = () => {
-    return user
-  }
+    return user;
+  };
 
   const signIn = async (user: UserLoginParams) => {
-
     try {
       const res = await login(user);
       const data = res.data;
@@ -37,10 +42,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         token: data.token,
         verified: data.user.verified,
       };
-
       setUser(userData);
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
       throw err;
     }
   };
@@ -60,7 +63,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       };
       setUser(userData);
     } catch (err) {
-      console.log(err);
+      log.error(err);
       throw err;
     }
   };
@@ -69,7 +72,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       // await AsyncStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
-      console.log(err);
+      log.error(err);
       throw err;
     }
   };
@@ -79,7 +82,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     signIn,
     signUp,
     storeUser,
-    useUser
+    useUser,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

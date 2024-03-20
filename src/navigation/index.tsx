@@ -1,10 +1,10 @@
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './screens/auth/Login';
 import Signup from './screens/auth/Signup';
 import {UserContext} from '../context/userContext';
-import {UserContextType} from '../models/UserContext';
+import {User, UserContextType} from '../models/UserContext';
 import Journaling from './screens/Journaling';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Therapists from './screens/Therapists';
@@ -12,7 +12,9 @@ import Resources from './screens/Resources';
 import Communities from './screens/Communities';
 import Profile from './screens/Profile';
 import Welcome from './screens/auth/Welcome';
-// import Journaling from './screens/Journaling';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {log} from '../utils/logs';
+import {getUserData} from '../api/BeWellApi';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -29,7 +31,17 @@ const TabNavigator = () => {
 };
 
 const Entry = () => {
+  const {storeUser} = useContext(UserContext) as UserContextType;
+
   const Stack = createNativeStackNavigator();
+  useEffect(() => {
+    AsyncStorage.getItem('userData').then(res => {
+      if (res !== null) {
+        let user: User = JSON.parse(res);
+        storeUser(user);
+      }
+    });
+  }, []);
 
   const {user} = useContext(UserContext) as UserContextType;
 

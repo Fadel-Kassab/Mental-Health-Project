@@ -18,6 +18,10 @@ export interface UserSignupParams {
   confirmPassword: string;
 }
 
+export interface UserDataRetrievalParams {
+  userToken: string;
+}
+
 export type UserContextType = {
   user: User;
   signIn: (user: UserLoginParams) => void;

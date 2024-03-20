@@ -10,6 +10,9 @@ import {
 } from '../../../components/Customs/Texts';
 import {UserContext} from '../../../context/userContext';
 import {UserContextType, UserSignupParams} from '../../../models/UserContext';
+import {useApiStatus} from '../../../hooks/useApiStatus';
+import {BeWellApi} from '../../../api/BeWellApi';
+import {log} from '../../../utils/logs';
 
 type FormData = {
   email: string;
@@ -32,7 +35,14 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
   });
 
   //Context Provider
-  const {signUp} = useContext(UserContext) as UserContextType;
+
+  const signupApi = useApiStatus({
+    api: BeWellApi.auth.register,
+    onSuccess({result}) {},
+    onFail(error) {
+      log.error(error);
+    },
+  });
 
   const onSubmit = handleSubmit(data => {
     let userData: UserSignupParams = {
@@ -40,7 +50,8 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
       password: data.password,
       confirmPassword: data.confirmPassword,
     };
-    signUp(data);
+
+    signupApi.fire(userData);
   });
 
   return (
@@ -67,7 +78,15 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
       <ErrorText>{errors.email?.message || ''}</ErrorText>
 
       <Controller
-        rules={{required: 'Password is required'}}
+        rules={{
+          required: true,
+          pattern: {
+            value:
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\\|[\]{};:'",.<>?]).{8,}$/,
+            message:
+              'Password must contain at least 8 characters.\nPassword must contain at least one uppercase letter.\nPassword must contain one lowercase letter.\nPassword must contain one number, and one special character',
+          },
+        }}
         control={control}
         name="password"
         render={({field: {onChange, value}}) => {
@@ -81,7 +100,7 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
           );
         }}
       />
-      <ErrorText>{errors.password?.message || ''}</ErrorText>
+      <ErrorText> </ErrorText>
       <Controller
         rules={{
           required: 'Passwords do not match',
@@ -101,7 +120,9 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
           );
         }}
       />
+
       <ErrorText>{errors.confirmPassword?.message || ''}</ErrorText>
+      <ErrorText>{errors.password?.message || '\n\n\n'}</ErrorText>
       <View style={{display: 'flex', alignItems: 'center', marginTop: 20}}>
         <CustomButton onPress={onSubmit} label="SignUp" />
         <View style={style.auth_navigation}>
@@ -111,7 +132,7 @@ const Signup = ({navigation, route}: {navigation: any; route: any}) => {
             label="Sign in"
           />
         </View>
-        <ErrorText>randomerror</ErrorText>
+        <ErrorText>{signupApi.errorMessage || ''}</ErrorText>
       </View>
     </View>
   );

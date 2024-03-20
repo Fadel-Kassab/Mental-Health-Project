@@ -4,7 +4,11 @@ import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton, {CustomTextButton} from '../../../components/CustomButton';
 import {useForm, Controller} from 'react-hook-form';
 import {UserContext} from '../../../context/userContext';
-import {UserContextType, UserLoginParams} from '../../../models/UserContext';
+import {
+  User,
+  UserContextType,
+  UserLoginParams,
+} from '../../../models/UserContext';
 import {useApiStatus} from '../../../hooks/useApiStatus';
 import {BeWellApi} from '../../../api/BeWellApi';
 import {
@@ -12,6 +16,8 @@ import {
   ErrorText,
   LightText,
 } from '../../../components/Customs/Texts';
+import {log} from '../../../utils/logs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type FormData = {
   email: string;
@@ -32,12 +38,26 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
   });
 
   //Context Provider
-  const {signIn} = useContext(UserContext) as UserContextType;
+  const {storeUser} = useContext(UserContext) as UserContextType;
 
   const loginApi = useApiStatus({
     api: BeWellApi.auth.login,
     onSuccess({result}) {
-      console.log(result);
+      const userData = result.user;
+
+      const user: User = {
+        id: userData._id,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        verified: userData.verified,
+        email: userData.email,
+        token: result.token,
+      };
+      storeUser(user);
+      AsyncStorage.setItem('userData', JSON.stringify(user));
+    },
+    onFail(error) {
+      // console.log('error', error.message);
     },
   });
 
@@ -46,8 +66,7 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
       email: data.email,
       password: data.password,
     };
-    //loginApi.fire(userData);
-    signIn(userData);
+    loginApi.fire(userData);
   });
 
   return (
@@ -61,7 +80,11 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
 
       <Controller
         rules={{
-          required: 'Email is required',
+          required: true,
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Enter a valid email',
+          },
         }}
         control={control}
         name="email"
@@ -78,7 +101,9 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
       <ErrorText>{errors.email?.message || ''}</ErrorText>
 
       <Controller
-        rules={{required: 'Password is required'}}
+        rules={{
+          required: 'Enter a password',
+        }}
         control={control}
         name="password"
         render={({field: {onChange, value}}) => {
@@ -104,6 +129,7 @@ const Login = ({navigation, route}: {navigation: any; route: any}) => {
             label="Create One"
           />
         </View>
+        <ErrorText>{loginApi.errorMessage || ''}</ErrorText>
       </View>
     </View>
   );
