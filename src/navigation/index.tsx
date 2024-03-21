@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './screens/auth/Login';
@@ -13,8 +13,7 @@ import Communities from './screens/Communities';
 import Profile from './screens/Profile';
 import Welcome from './screens/auth/Welcome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {log} from '../utils/logs';
-import {getUserData} from '../api/BeWellApi';
+import {View} from 'react-native';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -31,6 +30,13 @@ const TabNavigator = () => {
 };
 
 const Entry = () => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
+  //context
   const {storeUser} = useContext(UserContext) as UserContextType;
 
   const Stack = createNativeStackNavigator();
@@ -40,43 +46,48 @@ const Entry = () => {
         let user: User = JSON.parse(res);
         storeUser(user);
       }
+      setLoading(false);
     });
   }, []);
 
   const {user} = useContext(UserContext) as UserContextType;
 
-  return (
-    <NavigationContainer>
-      {!user.token ? (
-        <Stack.Navigator
-          screenOptions={{
-            contentStyle: {
-              backgroundColor: '#F5F5F5',
-            },
-          }}>
-          <Stack.Screen
-            name="welcome"
-            component={Welcome}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="signin"
-            component={Login}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="signup"
-            component={Signup}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="tab" component={TabNavigator} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
-  );
+  if (loading) {
+    return <View />;
+  } else {
+    return (
+      <NavigationContainer>
+        {!user.token ? (
+          <Stack.Navigator
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: '#F5F5F5',
+              },
+            }}>
+            <Stack.Screen
+              name="welcome"
+              component={Welcome}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="signin"
+              component={Login}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="signup"
+              component={Signup}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="tab" component={TabNavigator} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    );
+  }
 };
 
 export default Entry;
