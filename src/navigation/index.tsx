@@ -34,7 +34,10 @@ const Entry = () => {
 
   return (
     <NavigationContainer>
-      {!user.token ? (
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="tab" component={TabNavigator} />
+      </Stack.Navigator>
+      {/* {!user.token ? (
         <Stack.Navigator>
           <Stack.Screen
             name="sigin"
@@ -48,10 +51,8 @@ const Entry = () => {
           />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="tab" component={TabNavigator} />
-        </Stack.Navigator>
-      )}
+        
+      )} */}
     </NavigationContainer>
   );
 };
