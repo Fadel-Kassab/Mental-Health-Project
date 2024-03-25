@@ -22,9 +22,15 @@ export interface UserDataRetrievalParams {
   userToken: string;
 }
 
+export interface UserVerificationParams {
+  id: string;
+  code: string;
+}
+
 export type UserContextType = {
   user: User;
   signIn: (user: UserLoginParams) => void;
   signUp: (user: UserSignupParams) => void;
   storeUser: (user: User) => void;
+  verifyUser: (response: string) => void;
 };

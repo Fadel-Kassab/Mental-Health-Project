@@ -4,6 +4,7 @@ import {
   UserDataRetrievalParams,
   UserLoginParams,
   UserSignupParams,
+  UserVerificationParams,
 } from '../models/UserContext';
 import {log} from '../utils/logs';
 
@@ -27,6 +28,8 @@ export const BeWellApi = {
       data: UserDataRetrievalParams,
     ): Promise<AxiosResponse<AuthResponse>> =>
       beWell.get('users/getUserData', {params: data}),
+    verfiy: (data: UserVerificationParams): Promise<AxiosResponse<string>> =>
+      beWell.post('users/verify', data),
   },
 };
 
@@ -51,6 +54,17 @@ export async function login(
   } catch (error: any) {
     const axiosError: AxiosErrorModel = new AxiosErrorModel(error);
     throw axiosError;
+  }
+}
+
+export async function verfiy(
+  data: UserVerificationParams,
+): Promise<AxiosResponse<string>> {
+  try {
+    return await beWell.post('users/verify', data);
+  } catch (error) {
+    log.error(error);
+    throw error;
   }
 }
 

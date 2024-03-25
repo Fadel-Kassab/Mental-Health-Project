@@ -14,6 +14,7 @@ import Profile from './screens/Profile';
 import Welcome from './screens/auth/Welcome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {View} from 'react-native';
+import Verfification from './screens/auth/Verfification';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -54,37 +55,49 @@ const Entry = () => {
 
   if (loading) {
     return <View />;
-  } else {
+  } else if (user.token === '') {
     return (
       <NavigationContainer>
-        {!user.token ? (
-          <Stack.Navigator
-            screenOptions={{
-              contentStyle: {
-                backgroundColor: '#F5F5F5',
-              },
-            }}>
-            <Stack.Screen
-              name="welcome"
-              component={Welcome}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="signin"
-              component={Login}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="signup"
-              component={Signup}
-              options={{headerShown: false}}
-            />
-          </Stack.Navigator>
-        ) : (
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="tab" component={TabNavigator} />
-          </Stack.Navigator>
-        )}
+        <Stack.Navigator
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: '#F5F5F5',
+            },
+          }}>
+          <Stack.Screen
+            name="welcome"
+            component={Welcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="signin"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="signup"
+            component={Signup}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else if (user.token && !user.verified) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="verification"
+            component={Verfification}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else if (user.verified) {
+    return (
+      <NavigationContainer>
+        <TabNavigator />
       </NavigationContainer>
     );
   }

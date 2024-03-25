@@ -26,6 +26,13 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({
   const storeUser = (user: User) => {
     setUser(user);
   };
+
+  const verifyUser = (response: string) => {
+    if (response === 'verified') {
+      setUser({...user, verified: true});
+    }
+  };
+
   const useUser = () => {
     return user;
   };
@@ -68,21 +75,13 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({
     }
   };
 
-  const _storeData = async (user: User) => {
-    try {
-      // await AsyncStorage.setItem('user', JSON.stringify(user));
-    } catch (err) {
-      log.error(err);
-      throw err;
-    }
-  };
-
   const value = {
     user,
     signIn,
     signUp,
     storeUser,
     useUser,
+    verifyUser,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
