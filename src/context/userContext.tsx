@@ -17,7 +17,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     verified: false,
   });
 
-  const storeUser = ( user: User ) => {
+  const storeUser = (user: User) => {
     setUser(user)
   }
   const useUser = () => {

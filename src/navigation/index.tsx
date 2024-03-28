@@ -11,6 +11,7 @@ import Therapists from './screens/Therapists';
 import Resources from './screens/Resources';
 import Communities from './screens/Communities';
 import Profile from './screens/Profile';
+import ArticlePage from './screens/ArticlePage';
 // import Journaling from './screens/Journaling';
 
 const BottomTab = createBottomTabNavigator();
@@ -50,6 +51,7 @@ const Entry = () => {
       ) : (
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="tab" component={TabNavigator} />
+          <Stack.Screen name="article" component={ArticlePage} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

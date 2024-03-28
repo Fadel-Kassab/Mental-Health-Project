@@ -24,7 +24,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       {...props}
     >
       {isLoading ?
-        <ActivityIndicator color={colors.white}/>
+        <ActivityIndicator color={colors.white} />
         :
         <Text className="text-center font-bold text-white">{label}</Text>
       }
